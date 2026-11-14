@@ -22,10 +22,8 @@ import {
   Plus, 
   Database,
   CheckCircle2,
-  AlertCircle,
-  Key
+  AlertCircle
 } from 'lucide-react';
-import { SEED_CREDENTIALS } from './data/mockData';
 
 function UserAppContent({ onOpenAdmin }) {
   const { 
@@ -229,7 +227,7 @@ function UserAppContent({ onOpenAdmin }) {
         <header>
           <div>
             <small>
-              Kordia Escrow Protocol · Cross-Border Trust
+              Kordia Protocol · Cross-Border Trust
             </small>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '2px' }}>
               <b style={{ color: 'var(--dark)' }}>{currentUser.name}</b>
@@ -243,22 +241,6 @@ function UserAppContent({ onOpenAdmin }) {
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            {/* Seed account password pill */}
-            <div style={{
-              background: '#F8FAFC',
-              border: '1px solid #E2E8F0',
-              padding: '3px 8px',
-              borderRadius: '6px',
-              fontSize: '10px',
-              color: '#475569',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '5px'
-            }}>
-              <Key size={11} color="var(--blue)" />
-              <span>Seed Pass: <code style={{ fontWeight: 700 }}>Password123!</code></span>
-            </div>
-
             {currentUser.is_verified ? (
               <span className="tag tagGreen" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '4px 9px' }}>
                 <CheckCircle2 size={13} />
