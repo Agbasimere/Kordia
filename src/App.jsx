@@ -67,7 +67,7 @@ function UserAppContent({ onOpenAdmin }) {
             <path d="M11.5 14L13 15.5L16.5 12" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
           <span>
-            Kordia Escrow
+            Kordia
           </span>
         </div>
 

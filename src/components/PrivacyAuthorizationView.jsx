@@ -88,7 +88,7 @@ export default function PrivacyAuthorizationView() {
             <div className="flex justify-between items-center text-xs">
               <b className="text-emerald-800 flex items-center gap-1.5">
                 <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                Kordia Private Escrow (Zcash Orchard Pool)
+                Kordia Private Vault (Zcash Orchard Pool)
               </b>
               <span className="badge-emerald px-2 py-0.5 rounded text-[10px] font-bold">Protected</span>
             </div>

@@ -84,7 +84,7 @@ export default function AuthPage({ onOpenAdmin }) {
             fontFamily: 'Manrope, sans-serif',
             margin: '0 0 4px'
           }}>
-            Kordia Escrow
+            Kordia
           </h1>
           <p style={{
             fontSize: '12px',

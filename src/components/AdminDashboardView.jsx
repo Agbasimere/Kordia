@@ -103,7 +103,7 @@ export default function AdminDashboardView({ onLock, onReturnToApp }) {
             </svg>
           </div>
           <span style={{ fontSize: '15px', fontWeight: 800, color: 'var(--dark)', letterSpacing: '-0.02em' }}>
-            Escrowry Admin
+            Kordia <span style={{ fontSize: '11px', color: 'var(--blue)', fontWeight: 700 }}>Admin</span>
           </span>
         </div>
 
@@ -186,7 +186,7 @@ export default function AdminDashboardView({ onLock, onReturnToApp }) {
               Super admin console
             </small>
             <b style={{ fontSize: '13px', color: 'var(--dark)' }}>
-              admin@test.escrowry.com
+              admin@kordia.work
             </b>
           </div>
 

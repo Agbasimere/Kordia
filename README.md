@@ -1,4 +1,4 @@
-# Kordia — Private Peer Escrow & Cross-Border Settlement
+# Kordia — Private Agreements. Protected Payments. Borderless Work.
 
 > **Private agreements. Protected payments. Borderless work.**
 
