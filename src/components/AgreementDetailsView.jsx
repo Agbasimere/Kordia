@@ -15,6 +15,7 @@ export default function AgreementDetailsView() {
     currentRole, 
     setCurrentRole, 
     setActiveView, 
+    setActiveModal,
     acceptAgreement, 
     fundEscrow, 
     approveMilestone, 
@@ -31,8 +32,36 @@ export default function AgreementDetailsView() {
   const agreement = getActiveAgreement();
   if (!agreement) {
     return (
-      <div className="max-w-7xl mx-auto py-12 text-center text-slate-500">
-        No active agreement selected.
+      <div style={{ padding: '60px 24px', maxWidth: '640px', margin: '0 auto', textAlign: 'center' }}>
+        <div style={{ width: '48px', height: '48px', borderRadius: '14px', background: '#F1F5F9', color: '#64748B', display: 'grid', placeItems: 'center', margin: '0 auto 16px' }}>
+          <FileText size={24} />
+        </div>
+        <h2 style={{ fontSize: '20px', fontWeight: 800, color: '#0F172A', margin: '0 0 8px', fontFamily: 'Manrope, sans-serif' }}>
+          No Agreement Selected
+        </h2>
+        <p style={{ fontSize: '13px', color: '#64748B', margin: '0 0 24px' }}>
+          {currentRole === 'client' 
+            ? 'Create a project agreement to begin escrow-protected milestones with talent.' 
+            : 'Agreements will appear here once proposed by clients.'}
+        </p>
+        <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+          <button
+            type="button"
+            onClick={() => setActiveView('projects')}
+            style={{ padding: '9px 18px', borderRadius: '8px', background: '#F1F5F9', color: '#334155', fontSize: '13px', fontWeight: 600, border: 0, cursor: 'pointer' }}
+          >
+            Browse Projects
+          </button>
+          {currentRole === 'client' && (
+            <button
+              type="button"
+              onClick={() => setActiveModal('create_project')}
+              style={{ padding: '9px 18px', borderRadius: '8px', background: '#0F172A', color: '#FFFFFF', fontSize: '13px', fontWeight: 700, border: 0, cursor: 'pointer' }}
+            >
+              Create Agreement
+            </button>
+          )}
+        </div>
       </div>
     );
   }
@@ -62,7 +91,9 @@ export default function AgreementDetailsView() {
   };
 
   const authSignaturesCount = agreement.authorizations?.filter(a => a.approved)?.length || 0;
-  const agreementLogs = activityLogs.filter(l => l.agreement_id === agreement.id);
+  const agreementLogs = activityLogs
+    .filter(l => l.agreement_id === agreement.id)
+    .sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
   return (
     <div className="adminPage animate-in fade-in duration-150">
@@ -147,7 +178,7 @@ export default function AgreementDetailsView() {
               <div>
                 <span className="text-[10px] text-slate-400 uppercase font-semibold block">Total Escrow Value</span>
                 <b className="text-slate-900 text-sm font-mono block mt-0.5">${agreement.total_amount.toFixed(2)} USD</b>
-                <span className="text-[11px] text-emerald-700 font-medium font-mono">~{(agreement.total_amount / EXCHANGE_RATES.ZEC_USD).toFixed(2)} ZEC Shielded</span>
+                <span className="text-[11px] text-emerald-700 font-medium font-mono">{agreement.total_amount.toFixed(2)} USDC via Pollar</span>
               </div>
             </div>
           </div>
@@ -202,6 +233,36 @@ export default function AgreementDetailsView() {
                       {milestone.submission_notes}
                     </div>
                   )}
+
+                  {milestone.attachments?.length > 0 && (
+                    <div className="p-2.5 rounded-lg bg-slate-50 border border-slate-100 space-y-1.5">
+                      <span className="font-bold text-slate-800 uppercase text-[10px] block">
+                        Attached Files &amp; Proof Images ({milestone.attachments.length})
+                      </span>
+                      <div className="space-y-1">
+                        {milestone.attachments.map((file, idx) => (
+                          <div key={idx} className="flex items-center justify-between text-xs py-1 border-b border-slate-100 last:border-0">
+                            <div className="flex items-center gap-2 truncate">
+                              <FileText className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                              <span className="text-slate-700 truncate">{file.name}</span>
+                              <span className="text-[10px] text-slate-400 font-mono">({file.size})</span>
+                            </div>
+                            {file.url && (
+                              <a 
+                                href={file.url} 
+                                target="_blank" 
+                                rel="noreferrer" 
+                                className="text-emerald-700 hover:text-emerald-800 font-semibold flex items-center gap-1 font-mono text-[11px] shrink-0"
+                              >
+                                <span>View</span>
+                                <ExternalLink className="w-3 h-3" />
+                              </a>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="pt-1 flex items-center justify-between">
@@ -231,14 +292,14 @@ export default function AgreementDetailsView() {
                   <div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                       <b className="text-slate-900 block">{log.action}</b>
-                      <span style={{ fontFamily: 'monospace', fontSize: '10px', color: 'var(--blue)', background: '#fff', padding: '1px 6px', borderRadius: '4px', border: '1px solid var(--border)' }}>
+                      <span style={{ fontFamily: 'monospace', fontSize: '10px', color: '#0F172A', fontWeight: 600, background: '#fff', padding: '1px 6px', borderRadius: '4px', border: '1px solid #E2E8F0' }}>
                         {log.actor}
                       </span>
                     </div>
                     <p className="text-slate-500 mt-1">{log.details}</p>
                   </div>
                   <span className="text-[11px] text-slate-400 shrink-0 font-mono">
-                    {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    {new Date(log.timestamp).toLocaleDateString([], { month: 'short', day: 'numeric' })} · {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 </div>
               ))}
@@ -264,7 +325,7 @@ export default function AgreementDetailsView() {
                 <h3 className="text-sm font-bold text-slate-900 uppercase tracking-wider">Escrow Settlement</h3>
               </div>
               <span className="badge-emerald px-2 py-0.5 rounded-full text-[10px] font-bold">
-                Shielded ZEC
+                Pollar Rails
               </span>
             </div>
 
@@ -278,44 +339,40 @@ export default function AgreementDetailsView() {
                 <span className="font-mono text-slate-500">-${(agreement.total_amount * 0.005).toFixed(2)} USD</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Shielded Zcash Pool:</span>
-                <span className="font-mono text-emerald-700 font-semibold">~{(agreement.total_amount / EXCHANGE_RATES.ZEC_USD).toFixed(2)} ZEC</span>
+                <span className="text-slate-500">Settlement Method:</span>
+                <span className="font-mono text-emerald-700 font-semibold">Stellar Testnet (Pollar SDK)</span>
               </div>
 
               <div className="h-px bg-slate-100 my-1.5" />
 
               <div className="flex justify-between items-start">
                 <div>
-                  <b className="text-slate-900 text-xs block">Net Pollar Payout:</b>
-                  <small className="text-slate-400">1 USD = ₦{EXCHANGE_RATES.USD_NGN.toLocaleString()}</small>
+                  <b className="text-slate-900 text-xs block">Net Escrow Payout:</b>
+                  <small className="text-slate-400">USDC on Stellar Testnet</small>
                 </div>
                 <div className="text-right">
                   <b className="text-emerald-700 font-mono text-base block font-extrabold">
-                    ₦{(agreement.total_amount * 0.995 * EXCHANGE_RATES.USD_NGN).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    ${(agreement.total_amount * 0.995).toFixed(2)} USDC
                   </b>
-                  <small className="text-slate-400">GTBank Nigeria</small>
+                  <small className="text-slate-400 font-mono">
+                    {agreement.payout?.recipient_wallet ? `${agreement.payout.recipient_wallet.slice(0, 6)}...${agreement.payout.recipient_wallet.slice(-4)}` : 'Talent Stellar Wallet'}
+                  </small>
                 </div>
               </div>
             </div>
 
-            {/* Viewing Key Selective Disclosure */}
+            {/* Escrow Guarantee */}
             <div className="mt-5 pt-4 border-t border-slate-100">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase text-slate-400">Selective Disclosure</span>
-                <button
-                  onClick={() => setShowViewingKey(!showViewingKey)}
-                  className="text-xs font-bold text-emerald-700 hover:text-emerald-800"
-                >
-                  {showViewingKey ? 'Hide Key' : 'Inspect Viewing Key'}
-                </button>
+                <span className="text-[10px] font-bold uppercase text-slate-400">Escrow Security</span>
+                <span className="text-xs font-bold text-emerald-700 flex items-center gap-1">
+                  <CheckCircle2 size={12} />
+                  <span>Pollar Multi-Party Escrow</span>
+                </span>
               </div>
-
-              {showViewingKey && (
-                <div className="mt-2.5 p-2.5 rounded-lg bg-slate-50 border border-slate-200 text-[10px] font-mono break-all text-slate-700">
-                  <span className="text-slate-400 block mb-0.5 font-sans">Amara Auditor Key:</span>
-                  {freelancer.viewing_key}
-                </div>
-              )}
+              <p className="text-[11px] text-slate-500 mt-1 leading-relaxed">
+                Funds are held in non-custodial milestone escrow and disbursed automatically upon mutual sign-off.
+              </p>
             </div>
           </div>
 

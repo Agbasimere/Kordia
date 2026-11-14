@@ -17,7 +17,7 @@ export default function Toast({ toast, onClose }) {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-50 max-w-sm w-full animate-in fade-in slide-in-from-bottom-5 duration-200">
+    <div className="fixed bottom-6 right-6 z-[999999] max-w-sm w-full animate-in fade-in slide-in-from-bottom-5 duration-200">
       <div className={`flex items-start gap-3 p-4 rounded-xl border ${borderColors[toast.type] || borderColors.info}`}>
         {icons[toast.type] || icons.info}
         <div className="flex-1 min-w-0">

@@ -1,355 +1,326 @@
 import React, { useState, useEffect } from 'react';
 import { AgreementProvider, useAgreement } from './context/AgreementContext';
-import DashboardView from './components/DashboardView';
-import CreateAgreementView from './components/CreateAgreementView';
+import { PollarProvider } from '@pollar/react';
+import { POLLAR_API_KEY, POLLAR_BASE_URL } from './lib/pollarClient';
+import LandingPage from './components/LandingPage';
+import CorporateDashboardView from './components/CorporateDashboardView';
+import ProjectsListView from './components/ProjectsListView';
+import TransactionsListView from './components/TransactionsListView';
 import AgreementDetailsView from './components/AgreementDetailsView';
+import CreateAgreementView from './components/CreateAgreementView';
 import SubmitReviewView from './components/SubmitReviewView';
 import PaymentSettlementView from './components/PaymentSettlementView';
-import PrivacyAuthorizationView from './components/PrivacyAuthorizationView';
+import NotificationModal from './components/NotificationModal';
+import ActionModals from './components/ActionModals';
+import NewAuthModal from './components/NewAuthModal';
+import UserProfileDropdown from './components/UserProfileDropdown';
 import AdminGate from './components/AdminGate';
-import AuthPage from './components/AuthPage';
 import Toast from './components/Toast';
+import KordiaLogo from './components/KordiaLogo';
 import { 
   LayoutDashboard, 
-  Receipt, 
-  Users, 
-  Scale, 
-  Landmark, 
-  Truck, 
-  ClipboardList, 
+  Folder, 
+  ArrowLeftRight, 
+  Bell, 
+  User, 
+  Settings, 
+  HelpCircle, 
   LogOut, 
   ShieldCheck, 
-  Plus, 
+  Search,
+  Sparkles,
+  Smartphone,
+  Send,
   Database,
-  CheckCircle2,
-  AlertCircle
+  ExternalLink,
+  Plus,
+  ArrowRight
 } from 'lucide-react';
 
-function UserAppContent({ onOpenAdmin }) {
+function UserAppContent({ onOpenAdmin, onOpenLanding }) {
   const { 
     activeView, 
     setActiveView, 
-    toastMessage, 
-    resetDemoData,
-    currentRole,
-    setCurrentRole,
-    getCurrentUser,
-    verifyUserEmail,
+    currentRole, 
+    setCurrentRole, 
+    getCurrentUser, 
+    unreadNotificationsCount, 
+    isAlertsOpen, 
+    setIsAlertsOpen, 
+    setActiveModal, 
     logout,
-    agreements 
+    linkedSocial 
   } = useAgreement();
 
-  const currentUser = getCurrentUser();
-
-  // Pending payouts counter
-  const pendingPayoutsCount = agreements.filter(a => a.status === 'Released' && a.payout?.status !== 'PAYOUT_COMPLETED').length;
+  const user = getCurrentUser();
+  const [isProfileFlyoutOpen, setIsProfileFlyoutOpen] = useState(false);
 
   return (
-    <div className="adminShell">
-      <a className="skipLink" href="#main-content">
-        Skip to content
-      </a>
-
-      {/* Sleek Fixed Sidebar matching the corporate HTML design */}
-      <aside>
-        <div 
-          className="brand" 
-          onClick={() => setActiveView('dashboard')} 
-          style={{ cursor: 'pointer' }}
-          role="button"
-          tabIndex={0}
-        >
-          <svg width="26" height="26" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="28" height="28" rx="8" fill="#101828"/>
-            <path d="M14 6L7 9.5V14C7 18.2 10 22 14 23.5C18 22 21 18.2 21 14V9.5L14 6Z" fill="#0055FF"/>
-            <path d="M11.5 14L13 15.5L16.5 12" stroke="#FFFFFF" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-          <span>
-            Kordia
-          </span>
-        </div>
-
-        <a 
-          className={activeView === 'dashboard' ? 'active' : ''} 
-          onClick={() => setActiveView('dashboard')}
-          href="#dashboard"
-        >
-          <LayoutDashboard size={16} />
-          Dashboard
-        </a>
-
-        <a 
-          className={activeView === 'details' ? 'active' : ''} 
-          onClick={() => setActiveView('details')}
-          href="#agreements"
-        >
-          <Receipt size={16} />
-          My Agreements
-        </a>
-
-        <a 
-          className={activeView === 'create' ? 'active' : ''} 
-          onClick={() => setActiveView('create')}
-          href="#create"
-        >
-          <Plus size={16} />
-          Create Agreement
-        </a>
-
-        <a 
-          className={activeView === 'submit_review' ? 'active' : ''} 
-          onClick={() => setActiveView('submit_review')}
-          href="#milestones"
-        >
-          <Truck size={16} />
-          Milestones & Delivery
-        </a>
-
-        <a 
-          className={activeView === 'payment_settlement' ? 'active' : ''} 
-          onClick={() => setActiveView('payment_settlement')}
-          href="#payouts"
-        >
-          <Landmark size={16} />
-          Pollar Settlement
-          {pendingPayoutsCount > 0 && (
-            <span className="payoutBadge">{pendingPayoutsCount}</span>
-          )}
-        </a>
-
-        <a 
-          className={activeView === 'privacy_auth' ? 'active' : ''} 
-          onClick={() => setActiveView('privacy_auth')}
-          href="#privacy"
-        >
-          <ShieldCheck size={16} />
-          Zcash Privacy & ZK
-        </a>
-
-        {/* Sidebar Bottom: Persona switcher & demo reset */}
-        <div className="adminBottom">
-          <div style={{ marginBottom: 14 }}>
-            <small style={{ 
-              display: 'block', 
-              fontSize: 10, 
-              color: 'var(--muted)', 
-              marginBottom: 5, 
-              textTransform: 'uppercase', 
-              letterSpacing: '0.06em', 
-              fontWeight: 700 
-            }}>
-              Active User Account
-            </small>
-            <select
-              value={currentRole}
-              onChange={(e) => setCurrentRole(e.target.value)}
-              aria-label="Active Account"
-              style={{
-                width: '100%',
-                fontSize: 11,
-                padding: '7px 8px',
-                borderRadius: 8,
-                border: '1px solid var(--border)',
-                background: '#fff',
-                color: 'var(--dark)',
-                fontWeight: 600
-              }}
-            >
-              <option value="client">Hirer: David Vance (@davidvance)</option>
-              <option value="freelancer">Talent: Amara Okafor (@amaraokafor)</option>
-            </select>
+    <div className="kordiaCorporateWrapper">
+      
+      {/* ========================================================
+          UPWARD HEADER NAVIGATION BAR
+         ======================================================== */}
+      <header className="kordiaUpwardHeader" style={{ position: 'relative' }}>
+        
+        {/* Left: Brand Logo + Stacked Collaborator Avatars (Matching Reference Image) */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '22px' }}>
+          <div 
+            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
+            onClick={() => setActiveView('dashboard')}
+            role="button"
+            tabIndex={0}
+          >
+            <KordiaLogo size={28} />
           </div>
 
+          {/* Collaborator Avatar Stack matching Reference Image */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }} className="hidden md:flex">
+            <div className="kordiaAvatarStack">
+              <img 
+                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&auto=format&fit=crop&q=80" 
+                alt="Amara" 
+                className="kordiaAvatarItem"
+                title="Amara Okafor"
+              />
+              <img 
+                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&auto=format&fit=crop&q=80" 
+                alt="David" 
+                className="kordiaAvatarItem"
+                title="David Vance"
+              />
+              <img 
+                src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=80&auto=format&fit=crop&q=80" 
+                alt="Admin" 
+                className="kordiaAvatarItem"
+                title="Admin"
+              />
+              <div className="kordiaAvatarCount">+5</div>
+            </div>
+
+            {/* Only Hirer can create agreement & invite talent */}
+            {currentRole === 'client' && (
+              <button
+                type="button"
+                onClick={() => setActiveModal('create_project')}
+                style={{
+                  padding: '6px 14px',
+                  borderRadius: '999px',
+                  border: '1px solid #E2E8F0',
+                  background: '#FFFFFF',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  color: '#334155',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  boxShadow: '0 1px 2px rgba(0,0,0,0.02)'
+                }}
+                className="hover:bg-slate-50"
+              >
+                <Plus size={12} />
+                <span>Add talent</span>
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* Center / Right: Individual Rectangular Nav Divs (Single rectangular divs matching reference image) */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          
+          <nav className="kordiaRectNavGroup">
+            <button
+              type="button"
+              className={`kordiaRectNavBtn ${activeView === 'dashboard' ? 'active' : ''}`}
+              onClick={() => setActiveView('dashboard')}
+            >
+              Overview
+            </button>
+
+            <button
+              type="button"
+              className={`kordiaRectNavBtn ${activeView === 'projects' || activeView === 'details' ? 'active' : ''}`}
+              onClick={() => setActiveView('projects')}
+            >
+              Projects
+            </button>
+
+            <button
+              type="button"
+              className={`kordiaRectNavBtn ${activeView === 'transactions' ? 'active' : ''}`}
+              onClick={() => setActiveView('transactions')}
+            >
+              Transactions
+            </button>
+
+            <button
+              type="button"
+              className={`kordiaRectNavBtn ${false ? 'active' : ''}`}
+              onClick={() => setIsAlertsOpen(true)}
+            >
+              Activity
+            </button>
+          </nav>
+
+          {/* Notification Bell in its own rectangular box (Matching Image) */}
           <button
             type="button"
-            onClick={resetDemoData}
-            style={{ marginBottom: '6px' }}
+            onClick={() => setIsAlertsOpen(!isAlertsOpen)}
+            style={{
+              width: '38px',
+              height: '38px',
+              borderRadius: '10px',
+              border: '1px solid #E2E8F0',
+              background: isAlertsOpen ? '#F1F5F9' : '#FFFFFF',
+              color: '#334155',
+              display: 'grid',
+              placeItems: 'center',
+              cursor: 'pointer',
+              position: 'relative',
+              boxShadow: '0 1px 2px rgba(0,0,0,0.02)'
+            }}
+            className="hover:bg-slate-50"
+            title="Alerts & Live Invites"
           >
-            <LogOut size={16} />
-            Reset demo state
+            <Bell size={16} />
+            {unreadNotificationsCount > 0 && (
+              <span style={{
+                position: 'absolute',
+                top: '-2px',
+                right: '-2px',
+                width: '15px',
+                height: '15px',
+                borderRadius: '50%',
+                background: '#EF4444',
+                color: '#FFFFFF',
+                fontSize: '9px',
+                fontWeight: 700,
+                display: 'grid',
+                placeItems: 'center',
+                border: '2px solid #FFFFFF'
+              }}>
+                {unreadNotificationsCount}
+              </span>
+            )}
           </button>
 
+          {/* User Profile Avatar with Online Ring */}
+          <div 
+            onClick={() => setIsProfileFlyoutOpen(!isProfileFlyoutOpen)}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              cursor: 'pointer',
+              padding: '2px',
+              borderRadius: '50%',
+              border: isProfileFlyoutOpen ? '2px solid #0F172A' : '2px solid transparent',
+              transition: 'all 0.15s ease'
+            }}
+            title="Your Profile & Assigned Tasks"
+          >
+            <img
+              src={user?.avatar || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=80&auto=format&fit=crop&q=80'}
+              alt=""
+              style={{ width: '34px', height: '34px', borderRadius: '50%', objectFit: 'cover', border: '1.5px solid #E2E8F0' }}
+            />
+          </div>
+
+          {/* Log Out Button */}
           <button
             type="button"
             onClick={logout}
             style={{
-              width: '100%',
-              padding: '6px 10px',
-              borderRadius: '7px',
-              border: '1px solid var(--border)',
-              background: '#fff',
-              color: 'var(--muted)',
-              fontSize: '11px',
-              fontWeight: 600,
+              border: 0,
+              background: 'transparent',
+              color: '#94A3B8',
               cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: '6px',
-              marginBottom: '8px'
+              padding: '4px',
+              display: 'grid',
+              placeItems: 'center'
             }}
+            className="hover:text-red-500"
+            title="Log out"
           >
-            <LogOut size={13} />
-            <span>Sign Out</span>
+            <LogOut size={15} />
           </button>
 
-          {/* Dedicated /admin link */}
-          <div style={{ borderTop: '1px solid var(--border)', paddingTop: '10px', marginTop: '6px' }}>
-            <button
-              type="button"
-              onClick={onOpenAdmin}
-              style={{
-                width: '100%',
-                background: 'transparent',
-                border: '1px solid rgba(0,85,255,0.2)',
-                color: 'var(--blue)',
-                padding: '7px 10px',
-                borderRadius: '7px',
-                fontSize: '11px',
-                fontWeight: 600,
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px'
-              }}
-            >
-              <Database size={13} />
-              <span>Admin Portal (/admin) →</span>
-            </button>
-          </div>
         </div>
-      </aside>
 
-      {/* Main Content Area */}
-      <main id="main-content">
-        {/* Top Header */}
-        <header>
-          <div>
-            <small>
-              Kordia Protocol · Cross-Border Trust
-            </small>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '2px' }}>
-              <b style={{ color: 'var(--dark)' }}>{currentUser.name}</b>
-              <span style={{ fontSize: '11px', fontFamily: 'monospace', color: 'var(--blue)', background: '#F3F5FF', padding: '1px 6px', borderRadius: '4px', fontWeight: 700 }}>
-                {currentUser.user_tag}
-              </span>
-              <span style={{ fontSize: '11px', color: 'var(--muted)' }}>
-                · {currentUser.company || currentUser.title || 'Verified'}
-              </span>
-            </div>
-          </div>
+        {/* Top-Right User Profile Container with Tasks Just Below Avatar */}
+        <UserProfileDropdown
+          isOpen={isProfileFlyoutOpen}
+          onClose={() => setIsProfileFlyoutOpen(false)}
+        />
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            {currentUser.is_verified ? (
-              <span className="tag tagGreen" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '4px 9px' }}>
-                <CheckCircle2 size={13} />
-                <span>Verified Tag Active</span>
-              </span>
-            ) : (
-              <button
-                type="button"
-                onClick={() => verifyUserEmail(currentRole)}
-                style={{
-                  fontSize: '11px',
-                  fontWeight: 600,
-                  padding: '5px 10px',
-                  borderRadius: '7px',
-                  border: '1px solid #f59e0b',
-                  background: '#fffbeb',
-                  color: '#b45309',
-                  cursor: 'pointer'
-                }}
-              >
-                Verify Email Now
-              </button>
-            )}
+      </header>
 
-            <div className="private">
-              <ShieldCheck size={15} />
-              Zcash Orchard Shielded
-            </div>
-          </div>
-        </header>
+      {/* Alerts Popover matching Image 2 */}
+      <NotificationModal 
+        isOpen={isAlertsOpen} 
+        onClose={() => setIsAlertsOpen(false)} 
+      />
 
-        {/* Unverified Account Warning Banner (If applicable) */}
-        {!currentUser.is_verified && (
-          <div style={{ background: '#FFFBEB', borderBottom: '1px solid #FDE68A', padding: '10px 32px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '12px', color: '#92400E' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <AlertCircle size={15} color="#D97706" />
-              <span>
-                Your account <strong>{currentUser.user_tag}</strong> is pending email verification. Verify your account to create and participate in escrow agreements.
-              </span>
-            </div>
-            <button
-              type="button"
-              onClick={() => verifyUserEmail(currentRole)}
-              style={{ fontSize: '11px', background: '#D97706', color: '#fff', border: 0, padding: '4px 12px', borderRadius: '6px', fontWeight: 600, cursor: 'pointer' }}
-            >
-              Verify Account
-            </button>
-          </div>
+      {/* Interactive Action Modals (Fund, Withdraw, Transfer, Tag, Profile, Create) */}
+      <ActionModals />
+
+      {/* Main Corporate Work Area */}
+      <main style={{ flex: 1 }}>
+        {activeView === 'dashboard' && (
+          <CorporateDashboardView onOpenProjectDetails={(id) => setActiveView('details')} />
         )}
 
-        {/* View Pages */}
-        <div style={{ minHeight: 'calc(100vh - 68px)' }}>
-          {activeView === 'dashboard' && <DashboardView />}
-          {activeView === 'details' && <AgreementDetailsView />}
-          {activeView === 'create' && <CreateAgreementView />}
-          {activeView === 'submit_review' && <SubmitReviewView />}
-          {activeView === 'payment_settlement' && <PaymentSettlementView />}
-          {activeView === 'privacy_auth' && <PrivacyAuthorizationView />}
-        </div>
+        {activeView === 'projects' && (
+          <ProjectsListView onOpenDetails={(id) => setActiveView('details')} />
+        )}
+
+        {activeView === 'transactions' && (
+          <TransactionsListView />
+        )}
+
+        {activeView === 'details' && (
+          <AgreementDetailsView />
+        )}
+
+        {activeView === 'create' && (
+          <CreateAgreementView />
+        )}
+
+        {activeView === 'submit_review' && (
+          <SubmitReviewView />
+        )}
+
+        {activeView === 'payment_settlement' && (
+          <PaymentSettlementView />
+        )}
+
+        {/* Fallback to dashboard so screen is never blank */}
+        {!['dashboard', 'projects', 'transactions', 'details', 'create', 'submit_review', 'payment_settlement'].includes(activeView) && (
+          <CorporateDashboardView onOpenProjectDetails={(id) => setActiveView('details')} />
+        )}
       </main>
 
-      {/* Mobile Bottom Navigation */}
-      <nav className="adminMobileNav">
-        <a 
-          className={activeView === 'dashboard' ? 'active' : ''} 
-          onClick={() => setActiveView('dashboard')}
-          href="#dashboard"
-        >
-          <LayoutDashboard />
-          Dashboard
-        </a>
-        <a 
-          className={activeView === 'details' ? 'active' : ''} 
-          onClick={() => setActiveView('details')}
-          href="#agreements"
-        >
-          <Receipt />
-          Agreements
-        </a>
-        <a 
-          className={activeView === 'create' ? 'active' : ''} 
-          onClick={() => setActiveView('create')}
-          href="#create"
-        >
-          <Plus />
-          Create
-        </a>
-        <a 
-          onClick={onOpenAdmin}
-          href="#admin"
-        >
-          <Database />
-          Admin
-        </a>
-      </nav>
-
-      {/* Toast Notification */}
-      <Toast toast={toastMessage} onClose={() => {}} />
     </div>
   );
 }
 
 function MainApp() {
-  const { isAuthenticated } = useAgreement();
+  const { 
+    isAuthenticated, 
+    currentRole, 
+    isLandingOpen, 
+    setIsLandingOpen 
+  } = useAgreement();
+
   const [isAdminRoute, setIsAdminRoute] = useState(() => {
     return window.location.pathname === '/admin' || 
            window.location.hash === '#/admin' || 
            window.location.hash === '#admin';
   });
+
+  const [authModalOpen, setAuthModalOpen] = useState(false);
+  const [authMode, setAuthMode] = useState('signin');
+  const [authRole, setAuthRole] = useState('freelancer');
 
   useEffect(() => {
     const handleUrlChange = () => {
@@ -378,15 +349,50 @@ function MainApp() {
     window.location.hash = '#dashboard';
   };
 
+  const openAuthWithParams = (mode = 'signin', role = 'freelancer') => {
+    setAuthMode(mode);
+    setAuthRole(role);
+    setAuthModalOpen(true);
+  };
+
+  // Route 1: Dedicated Admin Portal (/admin)
   if (isAdminRoute) {
     return <AdminGate onReturnToApp={returnToApp} />;
   }
 
-  if (!isAuthenticated) {
-    return <AuthPage onOpenAdmin={openAdmin} />;
+  // Route 2: Landing Page (Image 3) when unauthenticated or requested
+  if (!isAuthenticated || isLandingOpen) {
+    return (
+      <>
+        <LandingPage 
+          onOpenAuth={openAuthWithParams} 
+          onLaunchDemo={(role) => openAuthWithParams('signin', role)} 
+        />
+        <NewAuthModal
+          isOpen={authModalOpen}
+          onClose={() => setAuthModalOpen(false)}
+          initialMode={authMode}
+          initialRole={authRole}
+        />
+      </>
+    );
   }
 
-  return <UserAppContent onOpenAdmin={openAdmin} />;
+  // Route 3: Authenticated Workspace (Image 1 & 2)
+  return (
+    <>
+      <UserAppContent 
+        onOpenAdmin={openAdmin} 
+        onOpenLanding={() => setIsLandingOpen(true)} 
+      />
+      <NewAuthModal
+        isOpen={authModalOpen}
+        onClose={() => setAuthModalOpen(false)}
+        initialMode={authMode}
+        initialRole={authRole}
+      />
+    </>
+  );
 }
 
 class ErrorBoundary extends React.Component {
@@ -403,25 +409,20 @@ class ErrorBoundary extends React.Component {
   render() {
     if (this.state.hasError) {
       return (
-        <div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', background: '#FAF8FF', padding: 24, fontFamily: 'Inter, sans-serif' }}>
-          <div style={{ maxWidth: 480, background: '#fff', border: '1px solid rgba(16,24,40,0.08)', borderRadius: 16, padding: 32, boxShadow: '0 14px 26px rgba(18,34,74,0.08)', textAlign: 'center' }}>
-            <div style={{ width: 44, height: 44, borderRadius: 12, background: 'rgba(239,68,68,0.1)', color: '#EF4444', display: 'grid', placeItems: 'center', margin: '0 auto 16px' }}>
-              <Scale size={22} />
-            </div>
-            <h2 style={{ fontSize: 20, fontFamily: 'Manrope, sans-serif', margin: '0 0 8px', color: '#101828' }}>Application State Reset</h2>
+        <div style={{ minHeight: '100vh', display: 'grid', placeItems: 'center', background: '#F4F5F8', padding: 24, fontFamily: 'Inter, sans-serif' }}>
+          <div style={{ maxWidth: 480, background: '#fff', border: '1px solid rgba(16,24,40,0.08)', borderRadius: 16, padding: 32, textAlign: 'center' }}>
+            <h2 style={{ fontSize: 20, fontFamily: 'Manrope, sans-serif', margin: '0 0 8px', color: '#101828' }}>Workspace Session Reset</h2>
             <p style={{ fontSize: 12, color: '#5B6472', lineHeight: 1.6, marginBottom: 20 }}>
-              An unexpected state transition occurred ({this.state.error?.message || 'State mismatch'}). Click below to restore clean demo data.
+              An unexpected state transition occurred ({this.state.error?.message || 'State mismatch'}). Click below to reload.
             </p>
             <button
               type="button"
               onClick={() => {
-                try {
-                  localStorage.clear();
-                } catch (e) {}
+                try { localStorage.clear(); } catch (e) {}
                 window.location.reload();
               }}
               style={{
-                background: 'linear-gradient(135deg, #0041C8, #0055FF)',
+                background: '#0F172A',
                 color: '#fff',
                 border: 0,
                 borderRadius: 9,
@@ -431,7 +432,7 @@ class ErrorBoundary extends React.Component {
                 cursor: 'pointer'
               }}
             >
-              Reset Demo State & Reload
+              Reset State &amp; Reload
             </button>
           </div>
         </div>
@@ -441,12 +442,50 @@ class ErrorBoundary extends React.Component {
   }
 }
 
+const POLLAR_CLIENT_CONFIG = {
+  apiKey: POLLAR_API_KEY,
+  baseUrl: POLLAR_BASE_URL,
+  stellarNetwork: 'testnet'
+};
+
+const POLLAR_APP_CONFIG = {
+  application: {
+    name: "Kordia",
+    network: "testnet",
+    chains: ["STELLAR"],
+    walletProvisioning: "AT_LOGIN",
+    walletCustodyMode: "INTERNAL",
+    signConfirmation: { mode: "PROMPT", windowSeconds: 300, maxUsd: "50" }
+  },
+  styles: {
+    theme: "light",
+    accentColor: "#0F172A",
+    emailEnabled: true,
+    embeddedWallets: true,
+    smartWallet: true,
+    modalZIndex: 999999,
+    providers: {
+      google: true,
+      discord: false,
+      x: false,
+      github: false,
+      apple: false
+    }
+  }
+};
+
 export default function App() {
   return (
     <ErrorBoundary>
-      <AgreementProvider>
-        <MainApp />
-      </AgreementProvider>
+      <PollarProvider 
+        client={POLLAR_CLIENT_CONFIG}
+        appConfig={POLLAR_APP_CONFIG}
+      >
+        <AgreementProvider>
+          <MainApp />
+          <Toast />
+        </AgreementProvider>
+      </PollarProvider>
     </ErrorBoundary>
   );
 }

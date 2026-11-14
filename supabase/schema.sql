@@ -197,3 +197,34 @@ values
   ('@amaraokafor', 'amara.okafor@devhub.ng', 'Amara Okafor', 'freelancer', 'Senior Full-Stack Engineer', 'Lagos, Nigeria', true, now(), 'u1amara01928374650192837465lagos091827364510293847561029384756', 'POL-NG-8840', 'Guaranty Trust Bank (GTBank)', '0149928371', 'AMARA BLESSING OKAFOR'),
   ('@admin', 'admin@kordia.work', 'Kordia Node Admin', 'admin', 'Kordia Protocol Operations', 'Global Escrow Network', true, now(), null, 'POL-GLOBAL-0001', null, null, null)
 on conflict (user_tag) do nothing;
+
+-- 11. SUPABASE STORAGE BUCKET FOR IMAGES & DELIVERABLES
+insert into storage.buckets (id, name, public, file_size_limit, allowed_mime_types)
+values (
+  'images',
+  'images',
+  true,
+  10485760,
+  array['image/png', 'image/jpeg', 'image/webp', 'image/gif', 'image/svg+xml', 'application/pdf', 'application/zip']
+)
+on conflict (id) do update set public = true;
+
+drop policy if exists "Public Access to Images" on storage.objects;
+create policy "Public Access to Images"
+  on storage.objects for select
+  using (bucket_id = 'images');
+
+drop policy if exists "Allow Public Uploads to Images" on storage.objects;
+create policy "Allow Public Uploads to Images"
+  on storage.objects for insert
+  with check (bucket_id = 'images');
+
+drop policy if exists "Allow Public Updates on Images" on storage.objects;
+create policy "Allow Public Updates on Images"
+  on storage.objects for update
+  using (bucket_id = 'images');
+
+drop policy if exists "Allow Public Deletes on Images" on storage.objects;
+create policy "Allow Public Deletes on Images"
+  on storage.objects for delete
+  using (bucket_id = 'images');

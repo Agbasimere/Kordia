@@ -1,6 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 @import "tailwindcss";
 @import "./adminStyles.css";
+@import "./kordiaTheme.css";
+
+body, input, button, select, textarea {
+  font-family: 'Plus Jakarta Sans', Inter, -apple-system, BlinkMacSystemFont, sans-serif !important;
+}
 
 /* App-wide custom helpers that complement Escrowry Admin styling */
 .demoScriptBtn {
@@ -39,18 +44,18 @@
 }
 
 .personaPill:hover {
-  border-color: rgba(0, 85, 255, 0.3);
-  background: #FAF8FF;
+  border-color: rgba(15, 23, 42, 0.3);
+  background: #F8FAFC;
 }
 
 .personaPill.active {
-  border-color: var(--blue);
-  background: #F3F5FF;
+  border-color: #0F172A;
+  background: #F1F5F9;
 }
 
 .speedrunStepBtn {
   border: 1px solid var(--border);
-  background: #FAF8FF;
+  background: #F8FAFC;
   padding: 10px;
   border-radius: 10px;
   text-align: left;
@@ -59,14 +64,14 @@
 }
 
 .speedrunStepBtn:hover {
-  border-color: var(--blue);
+  border-color: #0F172A;
   background: #fff;
-  box-shadow: 0 4px 12px rgba(0, 85, 255, 0.06);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
 }
 
 .speedrunStepBtn.active {
-  border-color: var(--blue);
-  background: #F3F5FF;
+  border-color: #0F172A;
+  background: #F1F5F9;
 }
 
 /* Custom scrollbars */
@@ -83,4 +88,17 @@
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+
+/* Pollar Modal Overlay Override */
+.pollar-overlay, :where(.pollar-overlay), div[class*="pollar-overlay"] {
+  z-index: 999999 !important;
+  --pollar-overlay-z-index: 999999 !important;
+  --pollar-brand-overlay-z-index: 999999 !important;
+  pointer-events: auto !important;
+}
+
+.pollar-modal-card, div[class*="pollar-modal"] {
+  z-index: 1000000 !important;
+  pointer-events: auto !important;
 }

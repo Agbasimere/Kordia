@@ -42,9 +42,15 @@ export const USERS = {
     is_verified: true,
     verified_at: "2026-11-01T12:00:00Z",
     avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
-    shielded_z_address: "u1apex93kd84920kmd01928472910kdjs8839201928374652019283746589",
-    viewing_key: "zxviews10928374650192837465201928374658920192837465019283746520",
     pollar_id: "POL-UK-9921",
+    wallet_details: {
+      chain: "STELLAR",
+      network: "testnet",
+      public_key: "GCDSPGQX2LK5LPVYW6J3VCOCTARG3YPWJJ2XPNASDRTDMZM7ZGCNPYKB",
+      custody: "Custodial (Pollar Embedded)",
+      asset: "USDC",
+      trustline_active: true
+    },
     total_spent: "$4,250.00",
     active_agreements: 1
   },
@@ -61,15 +67,14 @@ export const USERS = {
     is_verified: true,
     verified_at: "2026-11-02T14:30:00Z",
     avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
-    shielded_z_address: "u1amara01928374650192837465lagos091827364510293847561029384756",
-    viewing_key: "zxviews29182736451029384756102938475619283746501928374652019283",
     pollar_id: "POL-NG-8840",
-    bank_details: {
-      bank_name: "Guaranty Trust Bank (GTBank)",
-      account_number: "0149928371",
-      account_name: "AMARA BLESSING OKAFOR",
-      currency: "NGN",
-      bvn_verified: true
+    wallet_details: {
+      chain: "STELLAR",
+      network: "testnet",
+      public_key: "GBBXZY3DLLBAD2AZ25YPQ7X3YXOA63VREVME473CZRSSHQFXGALLYLNU",
+      custody: "Custodial (Pollar Embedded)",
+      asset: "USDC",
+      trustline_active: true
     },
     total_earned: "$8,950.00",
     active_agreements: 1
@@ -105,7 +110,6 @@ export const INITIAL_AGREEMENTS = [
     freelancer_id: "usr-free-02",
     total_amount: 500.0,
     currency: "USD",
-    equivalent_zec: 12.50,
     status: "Submitted", // 'Awaiting acceptance' | 'Awaiting funding' | 'Active' | 'Submitted' | 'Approved' | 'Released' | 'Refunded'
     created_at: "2026-11-12T09:40:00Z",
     deadline: "2026-11-25",
@@ -125,12 +129,9 @@ export const INITIAL_AGREEMENTS = [
         status: "Submitted",
         submission_url: "https://apex-store-staging.vercel.app",
         repo_url: "https://github.com/amara-okafor/apex-commerce-mvp",
-        submission_notes: "Deployed to Vercel production preview. 100% responsive across iPhone 15, iPad, and 4K displays. All 18 automated Cypress & Jest test suites passing. Audit score 98/100 on Lighthouse.",
+        submission_notes: "Deployed to production preview. Responsive layout verified.",
         submitted_at: "2026-11-14T07:15:00Z",
-        attachments: [
-          { name: "Lighthouse_Audit_Performance_99.pdf", size: "1.4 MB", type: "pdf" },
-          { name: "Integration_Verification_Report.pdf", size: "840 KB", type: "pdf" }
-        ]
+        attachments: []
       }
     ],
     authorizations: [
@@ -140,27 +141,27 @@ export const INITIAL_AGREEMENTS = [
     escrow: {
       is_funded: true,
       funded_at: "2026-11-12T10:30:00Z",
-      pool: "Zcash Orchard Shielded Pool",
+      pool: "Kordia Pollar Protected Escrow Vault",
       tx_hash: "0x8fa4b9319e76fca55301bcde99a43928174e92a83fbb092305829d4c1",
-      shielded_memo: "KRD-2026-9042::ESCROW_DEPOSIT_500USD_APEX",
-      deposit_asset: "ZEC (Shielded)",
-      deposit_amount: 12.50,
+      memo: "KRD-2026-9042::ESCROW_DEPOSIT_500USD_APEX",
+      deposit_asset: "USD (Pollar Rails)",
+      deposit_amount: 500.00,
       usd_value: 500.00,
       is_simulated: true
     },
     payout: {
-      target_currency: "NGN",
-      bank_name: "Guaranty Trust Bank (GTBank)",
-      account_number: "0149928371",
-      account_name: "AMARA BLESSING OKAFOR",
+      target_asset: "USDC",
+      chain: "STELLAR",
+      network: "testnet",
+      recipient_wallet: "GBBXZY3DLLBAD2AZ25YPQ7X3YXOA63VREVME473CZRSSHQFXGALLYLNU",
+      recipient_tag: "@amaraokafor",
       gross_amount_usd: 500.0,
       protocol_fee_usd: 2.50,
       net_usd: 497.50,
-      fx_rate: 1680.50,
-      estimated_local_amount: 836048.75,
       status: "PENDING",
-      provider_reference: "POL-NGN-LIVE-SIM",
-      quote_expires_at: "2026-11-14T11:45:00Z"
+      trustline_status: "VERIFIED_100_PERCENT",
+      provider_reference: "POL-PAY-STELLAR",
+      quote_expires_at: "2026-12-31T23:59:59Z"
     }
   }
 ];
@@ -180,8 +181,8 @@ export const INITIAL_ACTIVITY_LOG = [
     timestamp: "2026-11-12T10:30:00Z",
     agreement_id: "KRD-2026-9042",
     actor: "@davidvance",
-    action: "Shielded Escrow Funded",
-    details: "12.50 ZEC locked into Zcash Orchard shielded pool with encrypted memo.",
+    action: "Escrow Capital Funded",
+    details: "$500.00 USD locked into Kordia Pollar protected escrow vault.",
     type: "funding"
   },
   {
@@ -205,7 +206,6 @@ export const INITIAL_ACTIVITY_LOG = [
 ];
 
 export const EXCHANGE_RATES = {
-  ZEC_USD: 40.00,
   USD_NGN: 1680.50,
   USD_KES: 130.25,
   USD_GHS: 15.80,

@@ -25,10 +25,10 @@ export default function AgreementTimelineTracker({ agreement, onActionTrigger })
   // 5 Step Lifecycle
   const steps = [
     { num: 1, name: "Proposal & Terms", key: "Awaiting acceptance" },
-    { num: 2, name: "Shielded Escrow", key: "Awaiting funding" },
+    { num: 2, name: "Pollar Escrow", key: "Awaiting funding" },
     { num: 3, name: "Work in Progress", key: "Active" },
     { num: 4, name: "Review & Approval", key: "Submitted" },
-    { num: 5, name: "Bank Payout", key: "Released" },
+    { num: 5, name: "Agreement Completed", key: "Released" },
   ];
 
   const getStepStatus = (stepNum) => {

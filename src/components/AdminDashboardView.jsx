@@ -430,15 +430,15 @@ export default function AdminDashboardView({ onLock, onReturnToApp }) {
                   <small>Currently Locked in Escrow</small>
                   <strong>${totalInEscrow.toFixed(2)}</strong>
                   <small style={{ color: 'var(--green)', marginTop: '4px' }}>
-                    ~{(totalInEscrow / EXCHANGE_RATES.ZEC_USD).toFixed(2)} ZEC in Orchard pool
+                    100% Pollar Protected Escrow
                   </small>
                 </div>
 
                 <div className="metric">
                   <small>Disbursed via Pollar</small>
-                  <strong>₦{(totalSettled * EXCHANGE_RATES.USD_NGN).toLocaleString()}</strong>
+                  <strong>{totalSettled.toFixed(2)} USDC</strong>
                   <small style={{ color: 'var(--muted)', marginTop: '4px' }}>
-                    Local Nigerian bank transfers
+                    Stellar embedded wallet payouts
                   </small>
                 </div>
 
@@ -446,7 +446,7 @@ export default function AdminDashboardView({ onLock, onReturnToApp }) {
                   <small>Platform Settlement Rate</small>
                   <strong>100%</strong>
                   <small style={{ color: 'var(--blue)', marginTop: '4px' }}>
-                    Zcash Orchard + Pollar Rails
+                    Kordia Pollar Rails
                   </small>
                 </div>
               </div>
@@ -483,7 +483,7 @@ export default function AdminDashboardView({ onLock, onReturnToApp }) {
 
                       <div style={{ textAlign: 'right' }}>
                         <b style={{ fontSize: '13px' }}>${agreement.total_amount?.toFixed(2)} USD</b>
-                        <small style={{ color: 'var(--green)' }}>~{(agreement.total_amount / EXCHANGE_RATES.ZEC_USD).toFixed(2)} ZEC</small>
+                        <small style={{ color: 'var(--green)' }}>Pollar Protected</small>
                       </div>
 
                       <div>
@@ -583,13 +583,13 @@ export default function AdminDashboardView({ onLock, onReturnToApp }) {
                             Talent: <strong style={{ color: 'var(--blue)' }}>{agreement.freelancer_tag || '@amaraokafor'}</strong>
                           </small>
                           <small style={{ color: 'var(--muted)', display: 'block', marginTop: '2px' }}>
-                            Shielded Zcash Pool: {agreement.escrow?.pool || 'Zcash Orchard'} · Pollar Ref: {agreement.payout?.provider_reference || 'POL-REF-PENDING'}
+                            Escrow Vault: {agreement.escrow?.pool || 'Pollar Protected Escrow'} · Pollar Ref: {agreement.payout?.provider_reference || 'POL-REF-PENDING'}
                           </small>
                         </div>
 
                         <div style={{ textAlign: 'right' }}>
                           <b style={{ fontSize: '13px' }}>${agreement.total_amount?.toFixed(2)} USD</b>
-                          <small style={{ color: 'var(--green)' }}>~{(agreement.total_amount / EXCHANGE_RATES.ZEC_USD).toFixed(2)} ZEC</small>
+                          <small style={{ color: 'var(--green)' }}>Pollar Rails</small>
                         </div>
 
                         <div>
@@ -715,40 +715,40 @@ export default function AdminDashboardView({ onLock, onReturnToApp }) {
             <div>
               <div className="pageHead">
                 <div className="eyebrow">Trust operations · Liquidity Rails</div>
-                <h1>Pollar Banking Rails & Settlement Ledger</h1>
+                <h1>Pollar Stellar Rails &amp; Settlement Ledger</h1>
               </div>
 
               {/* FX Rates and SLA Cards */}
               <div className="metrics">
                 <div className="metric">
-                  <small>USD / NGN Clearing Peg</small>
-                  <strong>₦{EXCHANGE_RATES.USD_NGN.toLocaleString()}</strong>
+                  <small>Settlement Asset</small>
+                  <strong>USDC (Stellar)</strong>
                   <small style={{ color: 'var(--blue)', marginTop: '4px' }}>
-                    Guaranty Trust Bank FX Feed
+                    Stellar Horizon Testnet
                   </small>
                 </div>
 
                 <div className="metric">
-                  <small>Shielded Zcash Pool Value</small>
-                  <strong>${EXCHANGE_RATES.ZEC_USD.toFixed(2)}</strong>
+                  <small>Escrow Security Model</small>
+                  <strong>100% Pollar</strong>
                   <small style={{ color: 'var(--green)', marginTop: '4px' }}>
-                    Orchard Pool Conversion
+                    Non-Custodial Protected Vault
                   </small>
                 </div>
 
                 <div className="metric">
-                  <small>Pollar Direct Rail SLA</small>
-                  <strong>&lt; 120s</strong>
+                  <small>Pollar Stellar Rail SLA</small>
+                  <strong>&lt; 5s</strong>
                   <small style={{ color: 'var(--muted)', marginTop: '4px' }}>
-                    Instant Nigerian NIP settlement
+                    Horizon Consensus Finality
                   </small>
                 </div>
 
                 <div className="metric">
-                  <small>Total NGN Disbursed</small>
-                  <strong>₦{(totalSettled * EXCHANGE_RATES.USD_NGN).toLocaleString()}</strong>
+                  <small>Total Volume Settled</small>
+                  <strong>${totalSettled.toFixed(2)} USDC</strong>
                   <small style={{ color: 'var(--green)', marginTop: '4px' }}>
-                    Zero failed transactions
+                    100% Trustline coverage
                   </small>
                 </div>
               </div>
@@ -757,9 +757,9 @@ export default function AdminDashboardView({ onLock, onReturnToApp }) {
               <section className="card" style={{ padding: '24px 28px' }}>
                 <div className="sectionHead" style={{ marginBottom: '16px' }}>
                   <div>
-                    <h3 style={{ margin: 0, fontSize: '16px' }}>Pollar Disbursal Queue & Nigerian Bank Rails</h3>
+                    <h3 style={{ margin: 0, fontSize: '16px' }}>Pollar Disbursal Queue &amp; Stellar Wallet Rails</h3>
                     <span className="muted" style={{ fontSize: '11px' }}>
-                      Cryptographic triggers routing escrow payouts into Nigerian commercial bank accounts
+                      Cryptographic triggers routing escrow payouts into connected Pollar Stellar wallets
                     </span>
                   </div>
                 </div>
@@ -767,7 +767,7 @@ export default function AdminDashboardView({ onLock, onReturnToApp }) {
                 <div>
                   {agreements.map((agreement) => {
                     const isPaid = agreement.status === 'Released' || agreement.payout?.status === 'PAYOUT_COMPLETED';
-                    const niraAmount = (agreement.total_amount || 0) * EXCHANGE_RATES.USD_NGN;
+                    const walletAddr = agreement.payout?.recipient_wallet || 'GBBXZY3DLLBAD2AZ25YPQ7X3YXOA63VREVME473CZRSSHQFXGALLYLNU';
 
                     return (
                       <div key={agreement.id} className="order" style={{ alignItems: 'flex-start' }}>
@@ -781,22 +781,20 @@ export default function AdminDashboardView({ onLock, onReturnToApp }) {
                           <div className="payoutAdminRow" style={{ marginTop: '4px' }}>
                             <span className="payoutBankDetails">
                               Beneficiary: <strong style={{ color: 'var(--blue)' }}>{agreement.freelancer_tag || '@amaraokafor'}</strong>
-                              {' · '}
-                              {agreement.payout?.bank_name || 'Guaranty Trust Bank (GTBank)'}
-                              {' · Acct: '}
-                              <code>{agreement.payout?.account_number || '0149928371'}</code>
+                              {' · Stellar Wallet: '}
+                              <code>{walletAddr.slice(0, 8)}...{walletAddr.slice(-4)}</code>
                             </span>
                           </div>
                           <small style={{ color: 'var(--muted)' }}>
-                            Provider Reference: <code>{agreement.payout?.provider_reference || `POL-NG-${agreement.id}`}</code>
+                            Provider Reference: <code>{agreement.payout?.provider_reference || `POL-STELLAR-${agreement.id}`}</code>
                           </small>
                         </div>
 
                         <div style={{ textAlign: 'right' }}>
                           <b style={{ fontSize: '14px', color: 'var(--dark)' }}>
-                            ₦{niraAmount.toLocaleString()} NGN
+                            ${agreement.total_amount?.toFixed(2)} USDC
                           </b>
-                          <small style={{ color: 'var(--muted)' }}>${agreement.total_amount?.toFixed(2)} USD</small>
+                          <small style={{ color: 'var(--muted)' }}>Stellar Testnet</small>
                         </div>
 
                         <div>
@@ -817,7 +815,7 @@ export default function AdminDashboardView({ onLock, onReturnToApp }) {
                           ) : (
                             <span style={{ fontSize: '11px', color: 'var(--green)', display: 'flex', alignItems: 'center', gap: '4px', fontWeight: 600 }}>
                               <CheckCircle2 size={13} />
-                              <span>Settled to GTBank</span>
+                              <span>Settled on Stellar</span>
                             </span>
                           )}
                         </div>
@@ -941,14 +939,14 @@ export default function AdminDashboardView({ onLock, onReturnToApp }) {
             {/* Cryptographic Escrow Vault Details */}
             <div style={{ padding: '14px', borderRadius: '10px', background: '#F0FDF4', border: '1px solid #BBF7D0', marginBottom: '16px' }}>
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
-                <b style={{ fontSize: '12px', color: '#166534' }}>Shielded Zcash Orchard Escrow Pool</b>
+                <b style={{ fontSize: '12px', color: '#166534' }}>Kordia Pollar Escrow Vault</b>
                 <span className="tag tagGreen">Funded &amp; Locked</span>
               </div>
               <div style={{ fontSize: '11px', color: '#166534', fontFamily: 'monospace', wordBreak: 'break-all' }}>
                 Deposit Tx: {inspectingAgreement.escrow?.tx_hash || '0x8fa4b9319e76fca55301bcde99a43928174e92a83fbb092305829d4c1'}
               </div>
               <div style={{ marginTop: '6px', fontSize: '11px', color: '#166534' }}>
-                Shielded Memo: <code>{inspectingAgreement.escrow?.shielded_memo || `${inspectingAgreement.id}::ESCROW_DEPOSIT`}</code>
+                Escrow Memo: <code>{inspectingAgreement.escrow?.memo || `${inspectingAgreement.id}::ESCROW_DEPOSIT`}</code>
               </div>
             </div>
 

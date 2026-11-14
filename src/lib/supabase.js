@@ -104,3 +104,89 @@ export async function syncAgreementToSupabase(agreement) {
     return false;
   }
 }
+
+/**
+ * Format bytes to readable string (e.g. 1.2 MB)
+ */
+export function formatBytes(bytes, decimals = 1) {
+  if (!+bytes) return '0 Bytes';
+  const k = 1024;
+  const dm = decimals < 0 ? 0 : decimals;
+  const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+}
+
+/**
+ * Upload a deliverable image or file to Supabase Storage 'images' bucket
+ */
+export async function uploadDeliverableFile(file, agreementId = 'general') {
+  const isImage = file.type?.startsWith('image/');
+  const formattedSize = formatBytes(file.size);
+  const cleanName = file.name.replace(/[^a-zA-Z0-9.-]/g, '_');
+  const filePath = `${agreementId}/${Date.now()}_${cleanName}`;
+
+  if (isSupabaseConfigured && supabase) {
+    try {
+      const { data, error } = await supabase.storage
+        .from('images')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: true
+        });
+
+      if (!error && data?.path) {
+        const { data: publicUrlData } = supabase.storage
+          .from('images')
+          .getPublicUrl(data.path);
+
+        return {
+          name: file.name,
+          size: formattedSize,
+          type: isImage ? 'image' : 'file',
+          url: publicUrlData?.publicUrl || URL.createObjectURL(file),
+          path: data.path,
+          isUploadedToSupabase: true
+        };
+      } else {
+        console.warn('Supabase storage upload notice, using client preview:', error?.message);
+      }
+    } catch (err) {
+      console.warn('Supabase storage upload exception:', err);
+    }
+  }
+
+  // Resilient fallback (DataURL for images, ObjectURL for files)
+  return new Promise((resolve) => {
+    if (isImage) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        resolve({
+          name: file.name,
+          size: formattedSize,
+          type: 'image',
+          url: e.target.result,
+          isUploadedToSupabase: false
+        });
+      };
+      reader.onerror = () => {
+        resolve({
+          name: file.name,
+          size: formattedSize,
+          type: 'file',
+          url: URL.createObjectURL(file),
+          isUploadedToSupabase: false
+        });
+      };
+      reader.readAsDataURL(file);
+    } else {
+      resolve({
+        name: file.name,
+        size: formattedSize,
+        type: 'file',
+        url: URL.createObjectURL(file),
+        isUploadedToSupabase: false
+      });
+    }
+  });
+}

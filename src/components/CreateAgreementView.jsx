@@ -65,9 +65,7 @@ export default function CreateAgreementView() {
   };
 
   const amountNum = parseFloat(formData.total_amount) || 0;
-  const equivalentZec = (amountNum / EXCHANGE_RATES.ZEC_USD).toFixed(2);
   const netUsd = (amountNum * 0.995).toFixed(2);
-  const estimatedNgn = (netUsd * EXCHANGE_RATES.USD_NGN).toLocaleString();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -286,8 +284,7 @@ export default function CreateAgreementView() {
                     className="w-full bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-slate-900 text-xs focus:outline-none focus:border-slate-900 transition-colors shadow-xs"
                   >
                     <option value="USD">USD ($)</option>
-                    <option value="ZEC">ZEC (Shielded)</option>
-                    <option value="USDC">USDC (Stablecoin)</option>
+                    <option value="USDC">USDC (Pollar Rails)</option>
                   </select>
                 </div>
               </div>
@@ -329,7 +326,7 @@ export default function CreateAgreementView() {
               <div>
                 <label className="block font-semibold text-slate-700 mb-1">Escrow Protocol</label>
                 <div className="p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 font-semibold">
-                  Zcash Shielded Orchard Vault
+                  Kordia Pollar Escrow Vault
                 </div>
               </div>
 
@@ -348,8 +345,8 @@ export default function CreateAgreementView() {
               </div>
             </div>
 
-            <div className="p-3 rounded-xl bg-blue-50/60 border border-blue-100 text-xs text-blue-900 leading-relaxed">
-              <strong>Direct Peer-to-Peer Consensus:</strong> Hirer inspects deliverables and authorizes release to Talent, or parties mutually agree on revisions or refund to Hirer. Funds are secured in shielded Zcash escrow until release.
+            <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-800 leading-relaxed">
+              <strong>Direct Peer-to-Peer Consensus:</strong> Hirer inspects deliverables and authorizes release to Talent, or parties mutually agree on revisions or refund to Hirer. Funds are secured in Kordia Pollar protected escrow until release.
             </div>
           </div>
 
@@ -402,12 +399,8 @@ export default function CreateAgreementView() {
                 <span className="font-bold text-slate-900 font-mono">${amountNum.toFixed(2)} USD</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-slate-500">Orchard Shielded Asset:</span>
-                <span className="font-semibold text-emerald-700 font-mono">~{equivalentZec} ZEC</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="text-slate-500">Pollar Net Clearing:</span>
-                <span className="font-bold text-slate-900 font-mono">₦{estimatedNgn} NGN</span>
+                <span className="text-slate-500">Pollar Stellar Payout:</span>
+                <span className="font-bold text-emerald-600 font-mono">{netUsd} USDC</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-slate-500">Inspection Window:</span>
@@ -416,7 +409,7 @@ export default function CreateAgreementView() {
             </div>
 
             <div className="text-[11px] text-slate-500 leading-relaxed border-t border-slate-100 pt-3">
-              Once submitted, the agreement appears immediately on <strong>{formData.counterparty_tag}</strong>'s dashboard. Work begins upon freelancer acceptance and shielded escrow funding.
+              Once submitted, the agreement appears immediately on <strong>{formData.counterparty_tag}</strong>'s dashboard. Work begins upon freelancer acceptance and escrow deposit funding.
             </div>
           </div>
         </div>
