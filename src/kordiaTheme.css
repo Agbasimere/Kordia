@@ -499,6 +499,30 @@
   transition: all 0.2s ease;
 }
 
+.kordiaCorporateClickableCard {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  border-radius: 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  cursor: pointer;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.kordiaCorporateClickableCard:hover {
+  border-color: #0F172A;
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+  transform: translateY(-2px);
+}
+
+.kordiaCorporateClickableCard:hover .cardActionArrow {
+  color: #0F172A !important;
+  transform: translate(2px, -2px);
+}
+
+.cardActionArrow {
+  transition: transform 0.18s ease, color 0.18s ease;
+}
+
 .kordiaParamModule {
   background: #F8F9FA;
   border: 1px solid #ECEEF2;

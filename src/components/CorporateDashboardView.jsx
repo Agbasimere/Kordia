@@ -266,8 +266,13 @@ export default function CorporateDashboardView({ onOpenProjectDetails }) {
         marginBottom: '26px'
       }} className="corporateGridStats">
         
-        {/* Box 1: Real-time Active Agreements */}
-        <div className="kordiaCorporateCard" style={{ padding: '20px 22px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '104px' }}>
+        {/* Box 1: Real-time Active Agreements (Clickable -> Projects/Agreements) */}
+        <div 
+          className="kordiaCorporateClickableCard" 
+          onClick={() => setActiveView('projects')}
+          title="Click to view all agreements"
+          style={{ padding: '20px 22px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '104px' }}
+        >
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
             <span style={{
               fontSize: '32px',
@@ -279,16 +284,19 @@ export default function CorporateDashboardView({ onOpenProjectDetails }) {
             }}>
               {activeAgreementsCount}
             </span>
-            <span style={{
-              fontSize: '11px',
-              fontWeight: 700,
-              color: '#059669',
-              background: '#ECFDF5',
-              padding: '2px 7px',
-              borderRadius: '999px'
-            }}>
-              Live
-            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{
+                fontSize: '11px',
+                fontWeight: 700,
+                color: '#059669',
+                background: '#ECFDF5',
+                padding: '2px 7px',
+                borderRadius: '999px'
+              }}>
+                Live
+              </span>
+              <ArrowUpRight size={15} className="cardActionArrow" style={{ color: '#94A3B8' }} />
+            </div>
           </div>
           <span style={{ fontSize: '12px', color: '#64748B', fontWeight: 500, fontFamily: "'Plus Jakarta Sans', Inter, sans-serif" }}>
             Active Agreements
@@ -314,8 +322,13 @@ export default function CorporateDashboardView({ onOpenProjectDetails }) {
           </span>
         </div>
 
-        {/* Box 3: Real-time Completed Contracts */}
-        <div className="kordiaCorporateCard" style={{ padding: '20px 22px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '104px' }}>
+        {/* Box 3: Real-time Completed Contracts (Clickable -> Transactions) */}
+        <div 
+          className="kordiaCorporateClickableCard" 
+          onClick={() => setActiveView('transactions')}
+          title="Click to view transactions & settlement history"
+          style={{ padding: '20px 22px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '104px' }}
+        >
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between' }}>
             <span style={{
               fontSize: '32px',
@@ -327,33 +340,34 @@ export default function CorporateDashboardView({ onOpenProjectDetails }) {
             }}>
               {completedCount}
             </span>
-            <span style={{
-              fontSize: '11px',
-              fontWeight: 700,
-              color: '#059669',
-              background: '#ECFDF5',
-              padding: '2px 7px',
-              borderRadius: '999px'
-            }}>
-              Settled
-            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{
+                fontSize: '11px',
+                fontWeight: 700,
+                color: '#059669',
+                background: '#ECFDF5',
+                padding: '2px 7px',
+                borderRadius: '999px'
+              }}>
+                Settled
+              </span>
+              <ArrowUpRight size={15} className="cardActionArrow" style={{ color: '#94A3B8' }} />
+            </div>
           </div>
           <span style={{ fontSize: '12px', color: '#64748B', fontWeight: 500, fontFamily: "'Plus Jakarta Sans', Inter, sans-serif" }}>
             Settled Contracts
           </span>
         </div>
 
-        {/* Box 4: Pollar Settlement & SDK Wallet Status */}
+        {/* Box 4: Pollar Settlement & SDK Wallet Status (Clickable -> Pollar Wallet Modal) */}
         <div 
-          className="kordiaCorporateCard" 
+          className="kordiaCorporateClickableCard" 
           style={{ 
             padding: '20px 22px', 
             display: 'flex', 
             flexDirection: 'column', 
             justifyContent: 'space-between', 
-            minHeight: '104px',
-            cursor: 'pointer',
-            transition: 'all 0.15s ease'
+            minHeight: '104px'
           }}
           onClick={() => {
             setActiveModal('pollar_wallet');
@@ -371,20 +385,23 @@ export default function CorporateDashboardView({ onOpenProjectDetails }) {
             }}>
               100%
             </span>
-            <span style={{
-              fontSize: '11px',
-              fontWeight: 700,
-              color: '#10B981',
-              background: '#ECFDF5',
-              padding: '2px 8px',
-              borderRadius: '999px',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '4px'
-            }}>
-              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981' }} />
-              {pollar?.wallet ? 'Connected' : 'Pollar Testnet'}
-            </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{
+                fontSize: '11px',
+                fontWeight: 700,
+                color: '#10B981',
+                background: '#ECFDF5',
+                padding: '2px 8px',
+                borderRadius: '999px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px'
+              }}>
+                <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#10B981' }} />
+                {pollar?.wallet ? 'Connected' : 'Pollar Testnet'}
+              </span>
+              <ArrowUpRight size={15} className="cardActionArrow" style={{ color: '#94A3B8' }} />
+            </div>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '8px' }}>
             <span style={{ fontSize: '12px', color: '#64748B', fontWeight: 500, fontFamily: "'Plus Jakarta Sans', Inter, sans-serif" }}>
@@ -569,196 +586,113 @@ export default function CorporateDashboardView({ onOpenProjectDetails }) {
         </div>
 
         {/* ====================================================
-            RIGHT COLUMN: TOP 2 CARDS + BOTTOM POLLAR FX CARD
+            RIGHT COLUMN: POLLAR SETTLEMENT RAIL CARD
            ==================================================== */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-          
-          {/* Top Row: 2 Cards Side-by-Side */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
-            
-            {/* Top Right Card 1 (White Card: 67% Confident) */}
-            <div className="kordiaCorporateCard" style={{ padding: '20px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', minHeight: '190px' }}>
-              <div>
-                <p style={{
-                  fontSize: '11px',
-                  color: '#64748B',
-                  margin: '0 0 12px',
-                  lineHeight: 1.35,
-                  fontFamily: "'Plus Jakarta Sans', Inter, sans-serif"
-                }}>
-                  How confident do you feel making decisions on Keel data and AI suggestions?
-                </p>
-
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
-                  <span style={{
+        <div>
+          <div className="kordiaCorporateCard" style={{ padding: '24px 26px', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '8px' }}>
+                <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                    <span style={{
+                      fontSize: '12px',
+                      color: '#64748B',
+                      fontWeight: 600,
+                      fontFamily: "'Plus Jakarta Sans', Inter, sans-serif"
+                    }}>
+                      Pollar Settlement Rail (Stellar Testnet)
+                    </span>
+                    <span style={{
+                      fontSize: '10px',
+                      fontWeight: 700,
+                      color: '#059669',
+                      background: '#ECFDF5',
+                      padding: '2px 8px',
+                      borderRadius: '999px',
+                      border: '1px solid #A7F3D0'
+                    }}>
+                      Live Rail
+                    </span>
+                  </div>
+                  <div style={{
                     fontSize: '32px',
                     fontWeight: 600,
                     color: '#0F172A',
-                    fontFamily: "'Plus Jakarta Sans', Inter, sans-serif"
+                    fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
+                    lineHeight: 1.15
                   }}>
-                    67%
-                  </span>
-                  <small style={{ fontSize: '11px', color: '#64748B' }}>Confident</small>
-                </div>
-              </div>
-
-              {/* Green pillar bar with floating 8.65% tag */}
-              <div style={{ position: 'relative', marginTop: '14px', height: '65px', display: 'flex', alignItems: 'flex-end', justifyContent: 'center' }}>
-                <div style={{
-                  width: '32px',
-                  height: '50px',
-                  borderRadius: '6px',
-                  background: 'linear-gradient(180deg, #A7F3D0 0%, #10B981 100%)',
-                  position: 'relative'
-                }}>
-                  <div style={{
-                    position: 'absolute',
-                    top: '-18px',
-                    left: '50%',
-                    transform: 'translateX(-50%)',
-                    background: '#ECFDF5',
-                    color: '#059669',
-                    fontSize: '9.5px',
-                    fontWeight: 700,
-                    padding: '1px 5px',
-                    borderRadius: '4px',
-                    whiteSpace: 'nowrap'
-                  }}>
-                    8.65%
+                    1.00 USDC <span style={{ fontSize: '15px', color: '#64748B', fontWeight: 500 }}>= $1.00 USD</span>
                   </div>
                 </div>
-              </div>
 
-              {/* Bottom legend dots */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '9.5px', color: '#94A3B8', marginTop: '10px' }}>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}><span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#10B981' }} /> Confident</span>
-                <span>Clear</span>
-                <span>Reliable</span>
-              </div>
-            </div>
-
-            {/* Top Right Card 2 (Solid Black Card #0F172A: Pollar Settlement Rails) */}
-            <div style={{
-              background: '#0F172A',
-              borderRadius: '20px',
-              padding: '20px',
-              color: '#FFFFFF',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              minHeight: '190px',
-              boxShadow: '0 4px 14px rgba(15, 23, 42, 0.2)'
-            }}>
-              <div>
-                <p style={{
-                  fontSize: '11px',
-                  color: '#94A3B8',
-                  margin: '0 0 12px',
-                  lineHeight: 1.35,
-                  fontFamily: "'Plus Jakarta Sans', Inter, sans-serif"
-                }}>
-                  Which rail is active for instant local milestone settlement?
-                </p>
-
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px' }}>
-                  <span style={{
-                    fontSize: '32px',
-                    fontWeight: 600,
-                    color: '#FFFFFF',
-                    fontFamily: "'Plus Jakarta Sans', Inter, sans-serif"
-                  }}>
-                    100%
-                  </span>
-                  <small style={{ fontSize: '11px', color: '#94A3B8' }}>Pollar Rails</small>
+                <div 
+                  onClick={() => setActiveModal('pollar_wallet')}
+                  title="Open Pollar Wallet"
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    border: '1px solid #E2E8F0',
+                    display: 'grid',
+                    placeItems: 'center',
+                    color: '#0F172A',
+                    background: '#F8FAFC',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  <ArrowUpRight size={16} />
                 </div>
               </div>
 
-              {/* High-tech Circular Gauge Arc Meter (Matching Reference Image) */}
-              <div style={{ display: 'flex', justifyContent: 'center', margin: '10px 0 6px' }}>
-                <svg width="120" height="60" viewBox="0 0 120 60">
-                  <path
-                    d="M 15 55 A 45 45 0 0 1 105 55"
-                    fill="none"
-                    stroke="#1E293B"
-                    strokeWidth="4"
-                    strokeLinecap="round"
-                  />
-                  <path
-                    d="M 15 55 A 45 45 0 0 1 105 55"
-                    fill="none"
-                    stroke="#10B981"
-                    strokeWidth="4"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </div>
-
-              {/* Bottom legend dots */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '9.5px', color: '#94A3B8' }}>
-                <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}><span style={{ width: '5px', height: '5px', borderRadius: '50%', background: '#10B981' }} /> Pollar</span>
-                <span>Stellar Horizon</span>
-                <span>Active Rail</span>
-              </div>
-            </div>
-
-          </div>
-
-          {/* Bottom Card (Pollar Stellar Settlement Rate: USDC on Stellar) */}
-          <div className="kordiaCorporateCard" style={{ padding: '20px 24px' }}>
-            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '4px' }}>
-              <div>
-                <span style={{
-                  fontSize: '12px',
-                  color: '#64748B',
-                  fontWeight: 600,
-                  fontFamily: "'Plus Jakarta Sans', Inter, sans-serif"
-                }}>
-                  Pollar Settlement Rail (Stellar Testnet)
-                </span>
-                <div style={{
-                  fontSize: '28px',
-                  fontWeight: 600,
-                  color: '#0F172A',
-                  fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
-                  lineHeight: 1.15
-                }}>
-                  1.00 USDC <span style={{ fontSize: '15px', color: '#64748B', fontWeight: 500 }}>= $1.00 USD</span>
-                </div>
-              </div>
-
-              <div style={{
-                width: '28px',
-                height: '28px',
-                borderRadius: '50%',
-                border: '1px solid #E2E8F0',
-                display: 'grid',
-                placeItems: 'center',
+              <p style={{
+                fontSize: '12px',
                 color: '#64748B',
-                cursor: 'pointer'
+                margin: '0 0 18px',
+                fontFamily: "'Plus Jakarta Sans', Inter, sans-serif",
+                lineHeight: 1.45
               }}>
-                <ArrowUpRight size={14} />
-              </div>
-            </div>
+                Direct cryptographic escrow & milestone settlement powered by Pollar SDK embedded Stellar wallets on Stellar Horizon testnet.
+              </p>
 
-            <p style={{
-              fontSize: '11px',
-              color: '#94A3B8',
-              margin: '0 0 16px',
-              fontFamily: "'Plus Jakarta Sans', Inter, sans-serif"
-            }}>
-              Direct cryptographic settlement to Pollar embedded Stellar wallets via Stellar Horizon testnet.
-            </p>
+              {/* Wallet info pill if connected */}
+              {activeRoleWallet && (
+                <div 
+                  onClick={() => setActiveModal('pollar_wallet')}
+                  title="Click to view wallet details"
+                  style={{
+                    background: '#F8FAFC',
+                    border: '1px solid #E2E8F0',
+                    borderRadius: '10px',
+                    padding: '10px 14px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                    marginBottom: '16px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <div style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#10B981' }} />
+                    <span style={{ fontSize: '11px', color: '#64748B', fontWeight: 500 }}>Pollar Testnet Wallet</span>
+                  </div>
+                  <span style={{ fontSize: '11px', fontFamily: 'monospace', fontWeight: 700, color: '#0F172A' }}>
+                    {activeRoleWallet.slice(0, 6)}...{activeRoleWallet.slice(-4)}
+                  </span>
+                </div>
+              )}
+            </div>
 
             {/* Fine Vertical Wave Line Chart spanning across the card */}
-            <div style={{ position: 'relative', width: '100%', height: '50px', display: 'flex', alignItems: 'center' }}>
+            <div style={{ position: 'relative', width: '100%', height: '60px', display: 'flex', alignItems: 'center', marginTop: 'auto' }}>
               <div style={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 {Array.from({ length: 42 }).map((_, i) => {
-                  const h = 8 + Math.abs(Math.sin(i / 3)) * 26;
+                  const h = 10 + Math.abs(Math.sin(i / 3)) * 32;
                   return (
                     <div
                       key={i}
                       style={{
-                        width: '1.5px',
+                        width: '2px',
                         height: `${h}px`,
                         background: '#CBD5E1',
                         borderRadius: '1px'
@@ -768,25 +702,32 @@ export default function CorporateDashboardView({ onOpenProjectDetails }) {
                 })}
               </div>
 
-              <div style={{
-                position: 'absolute',
-                right: '40px',
-                top: '50%',
-                transform: 'translateY(-50%)',
-                background: '#A7F3D0',
-                color: '#065F46',
-                fontSize: '10px',
-                fontWeight: 700,
-                padding: '2px 8px',
-                borderRadius: '999px',
-                border: '1px solid #6EE7B7'
-              }}>
-                Active Rail
+              <div 
+                onClick={() => setActiveModal('pollar_wallet')}
+                style={{
+                  position: 'absolute',
+                  right: '20px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: '#A7F3D0',
+                  color: '#065F46',
+                  fontSize: '11px',
+                  fontWeight: 700,
+                  padding: '3px 10px',
+                  borderRadius: '999px',
+                  border: '1px solid #6EE7B7',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px'
+                }}
+              >
+                <span>Active Rail</span>
+                <ArrowUpRight size={12} />
               </div>
             </div>
 
           </div>
-
         </div>
 
       </div>
