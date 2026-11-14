@@ -1,0 +1,22 @@
+{
+  "name": "Escrowry",
+  "short_name": "Escrowry",
+  "description": "Protected escrow for buyers, sellers, and logistics.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#0041C8",
+  "theme_color": "#0041C8",
+  "icons": [
+    {
+      "src": "/escrowry-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/escrowry-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
