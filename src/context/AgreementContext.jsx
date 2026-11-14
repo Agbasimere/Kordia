@@ -20,7 +20,7 @@ const STORAGE_KEY_AGREEMENTS = 'kordia_agreements_v7';
 const STORAGE_KEY_PROFILES = 'kordia_profiles_v7';
 const STORAGE_KEY_LOGS = 'kordia_activity_logs_v7';
 const STORAGE_KEY_ROLE = 'kordia_active_role_v7';
-const STORAGE_KEY_AUTH = 'kordia_authenticated_v7';
+const STORAGE_KEY_AUTH = 'kordia_authenticated_v8';
 const STORAGE_KEY_NOTIFS = 'kordia_notifications_v7';
 const STORAGE_KEY_BALANCES = 'kordia_balances_v7';
 const STORAGE_KEY_SOCIAL = 'kordia_social_v7';
@@ -171,9 +171,9 @@ export function AgreementProvider({ children }) {
     try {
       const saved = localStorage.getItem(STORAGE_KEY_AUTH);
       if (saved !== null) return saved === 'true';
-      return true; // Auto-authenticated as David Vance (Hirer) for clean workflow testing
+      return false; // Default: unauthenticated so all visitors see the Landing Page first
     } catch (e) {
-      return true;
+      return false;
     }
   });
 
@@ -331,7 +331,14 @@ export function AgreementProvider({ children }) {
   const [activeView, setActiveView] = useState('dashboard'); // 'dashboard' | 'projects' | 'transactions' | 'notifications' | 'profile' | 'settings' | 'details' | 'create'
   const [toastMessage, setToastMessage] = useState(null);
   const [displayCurrency, setDisplayCurrency] = useState('USD'); // 'USD' | 'USDC'
-  const [isLandingOpen, setIsLandingOpen] = useState(false);
+  const [isLandingOpen, setIsLandingOpen] = useState(() => {
+    try {
+      const savedAuth = localStorage.getItem(STORAGE_KEY_AUTH);
+      return savedAuth !== 'true';
+    } catch (e) {
+      return true;
+    }
+  });
   const [isAlertsOpen, setIsAlertsOpen] = useState(false);
   const [activeModal, setActiveModal] = useState(null); // 'fund' | 'withdraw' | 'transfer' | 'tag' | 'profile' | 'create_project' | 'invite' | null
 
